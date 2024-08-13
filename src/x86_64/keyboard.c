@@ -1,5 +1,7 @@
 #include <stdint.h>
 
+#include "kernel/print.h"
+
 extern void setup_interrupts(void);
 
 // Function to read from an I/O port
@@ -15,9 +17,8 @@ volatile uint8_t scan_code = 0;
 void keyboard_handler_c() {
     // Read the scan code from the keyboard data port (0x60)
     scan_code = inb(0x60);
-    
-    // Handle the scan code (convert to ASCII or handle special keys)
-    // For now, just store the scan code for later use
+
+    print_char('.');
 }
 
 void keyboard_init() {
