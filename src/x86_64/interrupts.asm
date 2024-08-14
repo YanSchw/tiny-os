@@ -125,17 +125,16 @@ section .text
         mov rdi, 0x21               ; IDT index for keyboard interrupt
         lea rsi, [keyboard_isr]     ; Address of keyboard ISR
         call set_idt_entry          ; Set the IDT entry
-
-        ; Step-by-step calculation of IDT size (limit)
+    
+        ; Calculate IDT limit
         lea rax, [idt_end]          ; Load the address of idt_end into rax
         sub rax, idt                ; Subtract the base address of idt to get the size
-        dec rax                     ; Subtract 1 from the size (for the limit)
         mov word [idt_ptr], ax      ; Store the lower 16 bits of size in the IDT pointer's first word
-
+    
         ; Store IDT base address in idt_ptr + 2
         mov rax, idt                ; IDT base address
         mov [idt_ptr + 2], rax      ; Store base address in the next part of the IDT pointer
-
+    
         call load_idt               ; Load the IDT
         ret
 
