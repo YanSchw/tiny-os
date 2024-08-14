@@ -53,21 +53,23 @@ section .text
         mov rax, rsi                ; Load the handler address (64 bits) into rax
         mov rbx, rdi                ; Load the index into rbx
         shl rbx, 4                  ; Multiply by 16 (size of IDT entry)
-
+    
         ; Set the low 16 bits of the handler address
         mov word [idt + rbx], ax
         ; Set the code segment selector
         mov word [idt + rbx + 2], 0x08
-        ; Set the flags
-        mov byte [idt + rbx + 4], 0x00
+        ; Set the type and attributes (0x8E = present, privilege level 0, interrupt gate)
         mov byte [idt + rbx + 5], 0x8E
-        ; Set the high 16 bits of the handler address (bits 16-31)
+        ; Zero the next byte
+        mov byte [idt + rbx + 4], 0x00
+        ; Set the high 16 bits of the handler address
         shr rax, 16
         mov word [idt + rbx + 6], ax
-
         ; Set the higher 32 bits of the handler address (bits 32-63)
         shr rax, 16
         mov dword [idt + rbx + 8], eax
+        ; Zero the final dword
+        mov dword [idt + rbx + 12], 0
         ret
 
     ; Keyboard ISR
